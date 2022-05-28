@@ -3,16 +3,26 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Models\Film;
+use App\Models\FilmFavorit;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class FilmsController extends Controller
 {
 
+
+
     public function index()
     {
+        $nowplaying = Film::where('tanggal_tayang', Carbon::now()->isoformat('YYYY-M-DD'))->get();
+        $comingsoon = Film::where('tanggal_tayang',  '>', Carbon::now()->isoformat('YYYY-M-DD'))->get();
         $film = Film::latest()->get();
+
+
+        return view('daftarfilm', compact('film', 'nowplaying', 'comingsoon'));
         return response([
             'success' => true,
             'message' => 'List Semua Posts',
@@ -168,6 +178,31 @@ class FilmsController extends Controller
                 'success' => false,
                 'message' => 'Film Gagal Dihapus!',
             ], 400);
+        }
+    }
+
+    public function tambahfilmfavorit($id)
+    {
+        $film = Film::find($id);
+        $user = Auth()->user()->id;
+
+
+        $filmfavorit = FilmFavorit::create([
+            'idfilm'     => $film->id,
+            'iduser'   => $user,
+
+        ]);
+
+        if ($filmfavorit) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Film Berhasil Disimpan Di Daftar Film Favorit Anda!',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Film Gagal Disimpan!',
+            ], 401);
         }
     }
 }
