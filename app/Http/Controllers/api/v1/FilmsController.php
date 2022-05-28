@@ -6,6 +6,7 @@ use App\Models\Film;
 use App\Models\FilmFavorit;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Rating;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +23,7 @@ class FilmsController extends Controller
         $film = Film::latest()->get();
 
 
-        return view('daftarfilm', compact('film', 'nowplaying', 'comingsoon'));
+        return view('index', compact('film', 'nowplaying', 'comingsoon'));
         return response([
             'success' => true,
             'message' => 'List Semua Posts',
@@ -202,6 +203,32 @@ class FilmsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Film Gagal Disimpan!',
+            ], 401);
+        }
+    }
+
+    public function rating(Request $request, $id)
+    {
+        $film = Film::find($id);
+        $user = Auth()->user()->id;
+
+
+        $rating = Rating::create([
+            'idfilm'     => $film->id,
+            'iduser'   => $user,
+            'rating'   => $request->input('rating'),
+
+        ]);
+
+        if ($rating) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Anda Telah Berhasil Memberi Rating Untuk Film!',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal Memberi Rating!',
             ], 401);
         }
     }

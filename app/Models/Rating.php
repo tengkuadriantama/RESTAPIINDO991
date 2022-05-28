@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FilmFavorit extends Model
+class Rating extends Model
 {
     use HasFactory;
     public $primaryKey  = 'id';
-    protected $table = "daftarfilmfavorits";
+    protected $table = "ratingfilms";
     protected $fillable = [
         'id',
         'idfilm',
         'iduser',
+        'rating',
 
     ];
 
