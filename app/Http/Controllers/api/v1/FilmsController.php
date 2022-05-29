@@ -29,29 +29,44 @@ class FilmsController extends Controller
     public function nowplaying()
     {
         $nowplaying = Film::where('tanggal_tayang', '=',  Carbon::now()->isoformat('YYYY-M-DD'))->get();
-        return response(
-            [
-                'success' => true,
-                'message' => 'List Semua Film Yang Sedang Tayang',
-                'data' => $nowplaying
-            ],
-            200
-        );
+        if ($nowplaying) {
+            return response(
+                [
+                    'success' => true,
+                    'message' => 'List Semua Film Yang Sedang Tayang',
+                    'data' => $nowplaying
+                ],
+                200
+            );
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Film Tidak Ditemukan!',
+                'data'    => ''
+            ], 401);
+        }
     }
 
     public function comingsoon()
     {
 
         $comingsoon = Film::where('tanggal_tayang',  '>', Carbon::now()->isoformat('YYYY-M-DD'))->get();
-
-        return response(
-            [
-                'success' => true,
-                'message' => 'List Semua Film Yang Coming Soon',
-                'data' => $comingsoon
-            ],
-            200
-        );
+        if ($comingsoon) {
+            return response(
+                [
+                    'success' => true,
+                    'message' => 'List Semua Film Yang Coming Soon',
+                    'data' => $comingsoon
+                ],
+                200
+            );
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Film Tidak Ditemukan!',
+                'data'    => ''
+            ], 401);
+        }
     }
 
     public function store(Request $request)
