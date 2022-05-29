@@ -14,21 +14,44 @@ use Illuminate\Support\Facades\Validator;
 class FilmsController extends Controller
 {
 
-
-
     public function index()
     {
-        $nowplaying = Film::where('tanggal_tayang', Carbon::now()->isoformat('YYYY-M-DD'))->get();
-        $comingsoon = Film::where('tanggal_tayang',  '>', Carbon::now()->isoformat('YYYY-M-DD'))->get();
+
         $film = Film::latest()->get();
-
-
-        return view('index', compact('film', 'nowplaying', 'comingsoon'));
         return response([
             'success' => true,
-            'message' => 'List Semua Posts',
+            'message' => 'List Semua Film!',
             'data' => $film
         ], 200);
+    }
+
+
+    public function nowplaying()
+    {
+        $nowplaying = Film::where('tanggal_tayang', '=',  '2022-05-29')->get();
+        return response(
+            [
+                'success' => true,
+                'message' => 'List Semua Film Yang Sedang Tayang',
+                'data' => $nowplaying
+            ],
+            200
+        );
+    }
+
+    public function comingsoon()
+    {
+
+        $comingsoon = Film::where('tanggal_tayang',  '>', Carbon::now()->isoformat('YYYY-M-DD'))->get();
+
+        return response(
+            [
+                'success' => true,
+                'message' => 'List Semua Film Yang Coming Soon',
+                'data' => $comingsoon
+            ],
+            200
+        );
     }
 
     public function store(Request $request)
