@@ -28,7 +28,7 @@ class FilmsController extends Controller
 
     public function nowplaying()
     {
-        $nowplaying = Film::where('tanggal_tayang', '=',  '2022-05-29')->get();
+        $nowplaying = Film::where('tanggal_tayang', '=',  Carbon::now()->isoformat('YYYY-M-DD'))->get();
         return response(
             [
                 'success' => true,
