@@ -35,16 +35,10 @@ Route::group(['middleware' => ['auth:sanctum', 'checkRole:admin']], function () 
 
 Route::group(['middleware' => ['auth:sanctum', 'checkRole:admin,user']], function () {
     Route::get('/v1/films', [FilmsController::class, 'index']);
+    Route::get('/v1/films/nowplaying', [FilmsController::class, 'nowplaying']);
+    Route::get('/v1/films/comingsoon', [FilmsController::class, 'comingsoon']);
     Route::get('/v1/films/{id}', [FilmsController::class, 'show']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/v1/films/{id}/tambahfilmfavorit', [FilmsController::class, 'tambahfilmfavorit']);
     Route::post('/v1/films/{id}/rating', [FilmsController::class, 'rating']);
-
-    Route::get('/test', function () {
-        $film = Film::latest()->get();
-
-        return view('daftarfilm', compact('film'));
-    });
-
-    // 
 });
